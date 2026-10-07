@@ -1,0 +1,148 @@
+:root {
+  --bg: #f1f5f9;
+  --panel: #ffffff;
+  --ink: #0f172a;
+  --muted: #64748b;
+  --line: #e2e8f0;
+  --primary: #2563eb;
+  --primary-ink: #ffffff;
+  --edge: #64748b;
+  --node-shadow: 0 1px 3px rgba(15, 23, 42, .12), 0 1px 2px rgba(15, 23, 42, .08);
+  --running: #f59e0b;
+  --done: #16a34a;
+  --error: #dc2626;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  font-family: -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  color: var(--ink);
+  background: var(--bg);
+}
+
+.topbar {
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--line);
+}
+
+.brand { font-weight: 700; font-size: 16px; display: flex; align-items: center; gap: 8px; }
+.brand .logo { color: var(--primary); }
+.brand .tag { font-size: 12px; font-weight: 400; color: var(--muted); margin-left: 6px; }
+
+.actions { display: flex; align-items: center; gap: 8px; }
+.actions .sep { width: 1px; height: 22px; background: var(--line); margin: 0 4px; }
+.actions .hint { font-size: 12px; color: var(--muted); margin-left: 6px; min-width: 90px; }
+
+button {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--ink);
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background .15s, border-color .15s;
+}
+button:hover { background: #f8fafc; border-color: #cbd5e1; }
+button.primary { background: var(--primary); color: var(--primary-ink); border-color: var(--primary); }
+button.primary:hover { background: #1d4ed8; }
+
+.layout {
+  display: grid;
+  grid-template-columns: 200px 1fr 320px;
+  height: calc(100% - 52px);
+}
+
+/* 左：节点面板 */
+.palette { background: var(--panel); border-right: 1px solid var(--line); padding: 12px; overflow-y: auto; }
+.palette h3 { margin: 0 0 4px; font-size: 14px; }
+.palette-tip { font-size: 12px; color: var(--muted); margin: 0 0 12px; }
+.node-btn {
+  display: flex; align-items: center; gap: 8px; width: 100%;
+  text-align: left; margin-bottom: 8px; padding: 8px 10px;
+}
+.node-btn .dot { width: 10px; height: 10px; border-radius: 50%; flex: none; }
+.node-btn .name { font-size: 13px; }
+
+/* 中：画布 */
+.canvas-wrap { position: relative; overflow: hidden; background:
+  radial-gradient(circle, #dbe2ea 1px, transparent 1px) 0 0 / 22px 22px, var(--bg); }
+#canvas { width: 100%; height: 100%; display: block; cursor: grab; }
+#canvas.panning { cursor: grabbing; }
+.canvas-help {
+  position: absolute; left: 12px; bottom: 12px;
+  font-size: 12px; color: var(--muted);
+  background: rgba(255,255,255,.8); padding: 6px 10px; border-radius: 6px;
+  border: 1px solid var(--line);
+}
+
+/* 节点与连线（SVG 内联样式由 JS 控制，这里给默认值） */
+.node-rect { stroke: #cbd5e1; stroke-width: 1.5; }
+.node-title { font-size: 13px; font-weight: 600; fill: #fff; pointer-events: none; }
+.node-sub { font-size: 11px; fill: rgba(255,255,255,.85); pointer-events: none; }
+.node-output { font-size: 10px; fill: rgba(255,255,255,.95); pointer-events: none; font-family: "SFMono-Regular", Consolas, monospace; }
+.port { stroke: #fff; stroke-width: 1.5; cursor: crosshair; }
+.port:hover { fill: #fde68a; }
+.port-in { fill: #94a3b8; }
+.port-out { fill: #475569; }
+.node.selected .node-rect { stroke: var(--primary); stroke-width: 2.5; }
+.node.running .node-rect { stroke: var(--running); stroke-width: 2.5; animation: nodepulse 1s ease-in-out infinite; }
+.node.done .node-rect { stroke: var(--done); stroke-width: 2.5; }
+.node.error .node-rect { stroke: var(--error); stroke-width: 2.5; }
+.edge-path { fill: none; stroke: var(--edge); stroke-width: 2; }
+.edge-path.active { stroke: var(--primary); stroke-width: 3; }
+.edge-path.fired {
+  stroke: var(--done); stroke-width: 2.5;
+  stroke-dasharray: 6 4; animation: edgeflow .6s linear infinite;
+}
+.edge-hit { fill: none; stroke: transparent; stroke-width: 12; cursor: pointer; }
+.temp-edge { fill: none; stroke: var(--primary); stroke-width: 2; stroke-dasharray: 5 4; }
+
+/* 右：属性 + 日志 */
+.inspector { background: var(--panel); border-left: 1px solid var(--line); display: flex; flex-direction: column; }
+.panel { padding: 12px; border-bottom: 1px solid var(--line); display: flex; flex-direction: column; min-height: 0; }
+.panel.grow { flex: 1; }
+.panel h3 { margin: 0 0 8px; font-size: 14px; }
+.props-empty { font-size: 13px; color: var(--muted); }
+
+.field { margin-bottom: 10px; }
+.field label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+.field input, .field textarea, .field select {
+  width: 100%; border: 1px solid var(--line); border-radius: 6px;
+  padding: 6px 8px; font-size: 13px; font-family: inherit; color: var(--ink);
+}
+.field textarea { min-height: 72px; resize: vertical; }
+.field .hint { font-size: 11px; color: var(--muted); margin-top: 3px; }
+
+.log { flex: 1; overflow-y: auto; font-size: 12px; line-height: 1.5; font-family: "SFMono-Regular", Consolas, monospace; }
+.log .row { padding: 4px 6px; border-bottom: 1px dashed var(--line); white-space: pre-wrap; word-break: break-word; }
+.log .row .node { font-weight: 600; }
+.log .row.start { color: var(--running); }
+.log .row.done { color: var(--done); }
+.log .row.error { color: var(--error); }
+.log .row.info { color: var(--muted); }
+
+/* 运行态动画 */
+@keyframes nodepulse {
+  0%, 100% { stroke-opacity: 1; }
+  50% { stroke-opacity: .35; }
+}
+@keyframes edgeflow {
+  to { stroke-dashoffset: -20; }
+}
+
+/* 属性面板：上次输出（只读） */
+.readonly-box {
+  background: #f8fafc; border: 1px solid var(--line); border-radius: 6px;
+  padding: 6px 8px; font-size: 12px; color: var(--ink);
+  white-space: pre-wrap; word-break: break-word; max-height: 120px; overflow-y: auto;
+  font-family: "SFMono-Regular", Consolas, monospace;
+}

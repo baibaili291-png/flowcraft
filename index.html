@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FlowCraft · 可视化 AI 工作流编排</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">◆</span> FlowCraft
+      <span class="tag">原生 SVG 画布 + 自研 DAG 执行引擎</span>
+    </div>
+    <div class="actions">
+      <button id="btn-run" class="primary">▶ 运行</button>
+      <button id="btn-stop">■ 停止</button>
+      <span class="sep"></span>
+      <button id="btn-save">保存</button>
+      <button id="btn-load">读取</button>
+      <button id="btn-export">导出 JSON</button>
+      <button id="btn-import">导入 JSON</button>
+      <span class="sep"></span>
+      <button id="btn-fit">适配视图</button>
+      <button id="btn-clear">清空</button>
+      <span class="hint" id="status">就绪</span>
+    </div>
+  </header>
+
+  <main class="layout">
+    <!-- 左：节点面板 -->
+    <aside class="palette" id="palette">
+      <h3>节点</h3>
+      <p class="palette-tip">点击添加节点到画布</p>
+      <!-- 由 nodes.js 动态生成 -->
+    </aside>
+
+    <!-- 中：SVG 画布 -->
+    <section class="canvas-wrap">
+      <svg id="canvas" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3"
+                  orient="auto" markerUnits="strokeWidth">
+            <path d="M0,0 L8,3 L0,6 Z" fill="#64748b"></path>
+          </marker>
+        </defs>
+        <g id="viewport">
+          <g id="edges"></g>
+          <g id="nodes"></g>
+        </g>
+      </svg>
+      <div class="canvas-help">
+        拖背景平移 · 滚轮缩放 · 从右侧圆点拉线到左侧圆点建边 · 选中后按 Delete 删除
+      </div>
+    </section>
+
+    <!-- 右：属性 + 运行日志 -->
+    <aside class="inspector">
+      <div class="panel">
+        <h3>属性</h3>
+        <div id="props" class="props-empty">未选中节点</div>
+      </div>
+      <div class="panel grow">
+        <h3>运行输出</h3>
+        <div id="log" class="log"></div>
+      </div>
+    </aside>
+  </main>
+
+  <!-- 导入用隐藏文件输入 -->
+  <input type="file" id="file-input" accept="application/json" style="display:none" />
+
+  <script src="js/graph.js"></script>
+  <script src="js/nodes.js"></script>
+  <script src="js/engine.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/canvas.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "nodes": [
+    { "id": "s1", "type": "start", "x": 40, "y": 140, "config": { "text": "请检查：设备功率为 18W" } },
+    { "id": "c1", "type": "if", "x": 300, "y": 140, "config": { "op": "contains", "value": "18W" } },
+    { "id": "t1", "type": "llm", "x": 560, "y": 40, "config": { "mock": true, "model": "deepseek-chat", "prompt": "功率正常，无需处理：{{text}}", "baseUrl": "", "apiKey": "" } },
+    { "id": "t2", "type": "llm", "x": 560, "y": 260, "config": { "mock": true, "model": "deepseek-chat", "prompt": "功率异常，请排查：{{text}}", "baseUrl": "", "apiKey": "" } },
+    { "id": "e1", "type": "end", "x": 840, "y": 150, "config": {} }
+  ],
+  "edges": [
+    { "id": "e1", "source": { "node": "s1", "port": "text" }, "target": { "node": "c1", "port": "text" } },
+    { "id": "e2", "source": { "node": "c1", "port": "true" }, "target": { "node": "t1", "port": "text" } },
+    { "id": "e3", "source": { "node": "c1", "port": "false" }, "target": { "node": "t2", "port": "text" } },
+    { "id": "e4", "source": { "node": "t1", "port": "text" }, "target": { "node": "e1", "port": "text" } },
+    { "id": "e5", "source": { "node": "t2", "port": "text" }, "target": { "node": "e1", "port": "text" } }
+  ]
+}
