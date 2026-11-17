@@ -1,0 +1,28 @@
+name: CI
+
+# 这个仓库没有构建步骤（纯静态、零依赖），CI 只做一件事：
+# 把 DAG 引擎的 13 条断言跑给你看。README 里说"13 条全绿"，
+# 徽章就是那句承诺的凭证 —— 每次提交都重新验一遍。
+#
+# 本地等价命令：node test/engine.test.js
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  engine-test:
+    name: DAG 引擎单测
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: 跑 5 个场景 / 13 条断言
+        run: node test/engine.test.js

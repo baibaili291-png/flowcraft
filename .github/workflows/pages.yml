@@ -1,0 +1,45 @@
+name: Deploy to GitHub Pages
+
+# 把仓库根目录原样发布成静态站点 → https://baibaili291-png.github.io/flowcraft/
+# 纯静态、零构建、全相对路径，所以不需要任何打包步骤。
+#
+# configure-pages 的 enablement: true 会顺手把 Pages 打开（首次运行自动创建站点），
+# 所以不需要去 Settings → Pages 手点一遍。
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: 发布静态站点
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 启用 / 读取 Pages 配置
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - name: 打包站点（仓库根目录）
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+      - name: 部署
+        id: deployment
+        uses: actions/deploy-pages@v4

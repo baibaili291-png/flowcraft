@@ -1,5 +1,10 @@
 # FlowCraft · 可视化 AI 工作流编排平台
 
+[![CI](https://github.com/baibaili291-png/flowcraft/actions/workflows/ci.yml/badge.svg)](https://github.com/baibaili291-png/flowcraft/actions/workflows/ci.yml)
+[![在线试用](https://img.shields.io/badge/%E5%9C%A8%E7%BA%BF%E8%AF%95%E7%94%A8-GitHub%20Pages-2ea44f)](https://baibaili291-png.github.io/flowcraft/)
+
+**在线试用（不用 clone）：<https://baibaili291-png.github.io/flowcraft/>** —— 纯静态，打开即用。
+
 拖拽节点、连线成 DAG，点一下就把整条链路跑起来。原生 SVG 自研画布 + 自研 DAG 执行引擎，
 **零前端框架、零编排库**——所有"难的东西"都是手写的，正好拿来跟面试官讲。
 
