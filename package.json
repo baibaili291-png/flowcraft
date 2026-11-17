@@ -1,0 +1,18 @@
+{
+  "name": "flowcraft",
+  "version": "1.0.0",
+  "private": true,
+  "description": "FlowCraft 可视化 AI 工作流编排平台：自研 SVG 画布 + 自研 DAG 执行引擎（零框架原生 JS）",
+  "scripts": {
+    "test": "node test/engine.test.js"
+  },
+  "keywords": [
+    "workflow",
+    "dag",
+    "svg-canvas",
+    "no-framework"
+  ],
+  "engines": {
+    "node": ">=18"
+  }
+}
